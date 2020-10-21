@@ -1,0 +1,11 @@
+Overwrite node_modules\metro\src\node-haste\DependencyGraph.js#getSha1 with this:
+
+if (!sha1) {
+      return getFileHash(resolvedPath)
+      function getFileHash(file) {
+        return require('crypto')
+          .createHash('sha1')
+          .update(fs.readFileSync(file))
+          .digest('hex')
+      }
+    }
