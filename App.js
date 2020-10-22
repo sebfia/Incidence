@@ -9,18 +9,14 @@ const apiUrl = (location) => `https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcg
 const apiUrlStates = 'https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%E4lle_in_den_Bundesl%E4ndern/FeatureServer/0/query?where=1%3D1&outFields=cases7_bl_per_100k&returnGeometry=false&outSR=4326&f=json'
 
 export default function App() {
-  const [location, setLocation] = useState(null);
-  const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [locationPermission, setLocationPermission] = useState(false);
   useEffect(() => {
     async function getLocation() {
       console.log('requesting permissions');
       let status = await Location.requestPermissionsAsync();
       console.log(status);
       let location = await Location.getCurrentPositionAsync({ accuracy : LocationAccuracy.Low });
-      setLocation(location);
       if(location) {
         console.log('Getting data from RKI');
         console.log(apiUrl(location.coords));
@@ -36,11 +32,6 @@ export default function App() {
     }
     getLocation();
   }, []);
-  useEffect(() => {
-    if(locationPermission) {
-      console.log('Getting location');
-    }
-  }, [locationPermission]);
   let area = 'Waiting..';
   let incidence = 'Waiting..'
   if(errorMsg) {
@@ -55,7 +46,7 @@ export default function App() {
       <View style={styles.box}>
         <Text style={styles.header}>🦠 INZIDENZ</Text>
         <Text style={styles.area}>{area}</Text>
-        <Text style={(data.incidence >= 50.) ? styles.red : styles.green}>{incidence}</Text>
+        <Text style={(data != undefined) ? ((data.incidence >= 50.) ? styles.red : styles.green) : styles.green}>{incidence}</Text>
         <StatusBar style="auto" />
       </View>
       </TouchableOpacity>
