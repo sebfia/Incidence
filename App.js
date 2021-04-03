@@ -21,10 +21,18 @@ export default function App() {
         console.log('Getting data from RKI');
         console.log(apiUrl(location.coords));
         try {
-        let response = await fetch(apiUrl(location.coords));
-        let json = await response.json();
-        var data = { area: json.features[0].attributes.GEN, incidence: json.features[0].attributes.cases7_per_100k.toFixed(1) };
-        setData(data);
+            let response = await fetch(apiUrl(location.coords));
+            if (response.status == 200) {
+                let json = await response.json();
+                var data = { area: json.features[0].attributes.GEN, incidence: json.features[0].attributes.cases7_per_100k.toFixed(1) };
+                setData(data);    
+            }
+            else {
+                let secondResponse = await fetch(apiUrlStates);
+                var secondJson = await secondResponse.json();
+                var data = {area: 'Deutschland', incidence: secondJson.features.map((f) => f.attributes.cases7_bl_per_100k).toFixed(1) };
+                setData(data);
+            }
         } catch(error) {
           console.log(error);
         }

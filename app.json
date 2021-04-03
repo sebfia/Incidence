@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Incidence",
+    "name": "Bulmidenz",
     "slug": "Incidence",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
